@@ -71,4 +71,4 @@ jobs:
         if [ $? -ne 0 ]; then
             echo "::warning ::$GOOS Build Failed"
             exit 0
-          fi
+        fi
