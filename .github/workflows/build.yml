@@ -34,16 +34,16 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
-      - name: Print Go version and environment
-        id: vars
-        run: |
-          printf "Using go at: $(which go)\n"
-          printf "Go version: $(go version)\n"
-          printf "\n\nGo environment:\n\n"
-          go env
-          printf "\n\nSystem environment:\n\n"
-          env
-          echo "::set-output name=go_cache::$(go env GOCACHE)"
+      # - name: Print Go version and environment
+      #   id: vars
+      #   run: |
+      #     printf "Using go at: $(which go)\n"
+      #     printf "Go version: $(go version)\n"
+      #     printf "\n\nGo environment:\n\n"
+      #     go env
+      #     printf "\n\nSystem environment:\n\n"
+      #     env
+      #     echo "::set-output name=go_cache::$(go env GOCACHE)"
 
       # - name: Cache
       #   uses: actions/cache@v2.1.6
