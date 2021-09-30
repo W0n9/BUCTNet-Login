@@ -67,8 +67,8 @@ jobs:
         shell: bash
         working-directory: ./cmd
         run: |
-        GOOS=$GOOS go build -trimpath -o buct_net_login-"$GOOS"-amd64 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "::warning ::$GOOS Build Failed"
-            exit 0
-        fi
+          GOOS=$GOOS go build -trimpath -o buct_net_login-"$GOOS"-amd64 2> /dev/null
+          if [ $? -ne 0 ]; then
+              echo "::warning ::$GOOS Build Failed"
+              exit 0
+          fi
