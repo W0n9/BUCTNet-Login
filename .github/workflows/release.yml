@@ -31,7 +31,6 @@ jobs:
       with:
         version: latest
         args: release --rm-dist
-        workdir: ./cmd
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # TAG: ${{ steps.vars.outputs.version_tag }}
