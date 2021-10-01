@@ -94,7 +94,7 @@ func ConfigE(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Print("设置校园网密码(隐私输入):\n>")
+	fmt.Print("设置校园网密码(隐私输入无回显):\n>")
 
 	// read in stdin
 	_ = term.DisableEcho(fd, oldState)
