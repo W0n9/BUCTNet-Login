@@ -47,7 +47,7 @@ type InfoResp struct {
 
 func (r *InfoResp) String() string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf(" 在线IP: %s\n", r.OnlineIP))
+	sb.WriteString(fmt.Sprintf("在线IP: %s\n", r.OnlineIP))
 	sb.WriteString(fmt.Sprintf("上网账号: %s\n", r.UserName))
 	sb.WriteString(fmt.Sprintf("电子钱包: ￥%.2f\n", r.WalletBalance))
 	sb.WriteString(fmt.Sprintf("套餐余额: ￥%.2f\n", r.UserBalance))
