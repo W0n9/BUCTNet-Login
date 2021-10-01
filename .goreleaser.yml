@@ -9,11 +9,12 @@ builds:
   - darwin
   - linux
   - windows
-  - freebsd
   goarch:
   - amd64
   - arm
   - arm64
+  - mipsle
+  - mips64le
   goarm:
   - 5
   - 6
@@ -21,12 +22,14 @@ builds:
   ignore:
     - goos: darwin
       goarch: arm
-    - goos: freebsd
-      goarch: arm
-      goarm: 5
-  targets:
-      - linux_mipsle
-      - linux_mips64le
+    - goos: darwin
+      goarch: mipsle
+    - goos: darwin
+      goarch: mips64le
+    - goos: windows
+      goarch: mipsle
+    - goos: windows
+      goarch: mips64le
   flags:
   - -trimpath
   ldflags:

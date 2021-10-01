@@ -61,7 +61,7 @@ func WriteAccount(account *model.Account) (err error) {
 }
 
 func getAccountFilename() (fileSrc string, err error) {
-	storageDir := filepath.Join(RootPath, ".srun")
+	storageDir := filepath.Join(RootPath, ".BUCTNet-Login")
 	if _, sErr := os.Stat(storageDir); sErr != nil {
 		if mErr := os.MkdirAll(storageDir, 0755); mErr != nil {
 			log.Debugf("mkdir `%s` error, %s", storageDir, mErr)
