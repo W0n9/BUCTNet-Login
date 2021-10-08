@@ -10,6 +10,8 @@
 ## 如何获取
 
 1. 在[Relesae](https://github.com/W0n9/BUCTNet-Login/releases/latest)处获取
+    > 其中MT7621等路由器SOC，选择mipsle架构（于NeWiFi3测试上测试通过）  
+    龙芯用户可以尝试选择mips64le架构（因缺少设备，未测试）
 
 2. 自行编译，要求有Golang环境 `go version >= 1.16`   
     1. 先克隆项目
@@ -58,3 +60,6 @@ $ BUCTNet-Login info
 
 - 本地保存账号到`$HOME/.BUCTNet-Login/account.json`
 - 使用账号快速登录校园网，环境支持的情况下也可以一键登录
+
+### Thanks to
+- [vouv/srun](https://github.com/vouv/srun)提供的hash算法
