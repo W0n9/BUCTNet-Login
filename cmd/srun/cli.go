@@ -8,13 +8,14 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/moby/moby/pkg/term"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/vouv/srun/core"
 	"github.com/vouv/srun/store"
+	"golang.org/x/term"
 )
 
+// Login 登录函数，处理登录流程
 func Login(cmd *cobra.Command, args []string) {
 	err := LoginE(cmd, args)
 	if err != nil {
@@ -22,6 +23,7 @@ func Login(cmd *cobra.Command, args []string) {
 	}
 }
 
+// LoginE 登录函数，返回错误信息
 func LoginE(cmd *cobra.Command, args []string) error {
 	account, err := store.ReadAccount()
 	if err != nil {
@@ -37,6 +39,7 @@ func LoginE(cmd *cobra.Command, args []string) error {
 	return store.WriteAccount(account)
 }
 
+// Logout 注销函数，处理注销流程
 func Logout(cmd *cobra.Command, args []string) {
 	err := LogoutE(cmd, args)
 	if err != nil {
@@ -44,6 +47,7 @@ func Logout(cmd *cobra.Command, args []string) {
 	}
 }
 
+// LogoutE 注销函数，返回错误信息
 func LogoutE(cmd *cobra.Command, args []string) error {
 	var err error
 	account, err := store.ReadAccount()
@@ -58,6 +62,7 @@ func LogoutE(cmd *cobra.Command, args []string) error {
 	return store.WriteAccount(account)
 }
 
+// Info 查询信息函数
 func Info(cmd *cobra.Command, args []string) {
 	err := InfoE(cmd, args)
 	if err != nil {
@@ -65,6 +70,7 @@ func Info(cmd *cobra.Command, args []string) {
 	}
 }
 
+// InfoE 查询信息函数，返回错误信息
 func InfoE(cmd *cobra.Command, args []string) error {
 	info, err := core.Info()
 	if err != nil {
@@ -74,6 +80,7 @@ func InfoE(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+// Config 配置账号密码函数
 func Config(cmd *cobra.Command, args []string) {
 	err := ConfigE(cmd, args)
 	if err != nil {
@@ -81,6 +88,7 @@ func Config(cmd *cobra.Command, args []string) {
 	}
 }
 
+// ConfigE 配置账号密码函数，返回错误信息
 func ConfigE(cmd *cobra.Command, args []string) error {
 
 	in := os.Stdin
@@ -88,19 +96,14 @@ func ConfigE(cmd *cobra.Command, args []string) error {
 	username := readInput(in)
 
 	// 终端API
-	fd, _ := term.GetFdInfo(in)
-	oldState, err := term.SaveState(fd)
+	fmt.Print("设置校园网密码(隐私输入):\n>")
+	fd := int(os.Stdin.Fd())
+	bytePwd, err := term.ReadPassword(fd)
 	if err != nil {
 		return err
 	}
-	fmt.Print("设置校园网密码(隐私输入):\n>")
-
-	// read in stdin
-	_ = term.DisableEcho(fd, oldState)
-	pwd := readInput(in)
-	_ = term.RestoreTerminal(fd, oldState)
-
 	fmt.Println()
+	pwd := string(bytePwd)
 
 	// trim
 	username = strings.TrimSpace(username)
@@ -113,6 +116,7 @@ func ConfigE(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+// readInput 读取输入内容
 func readInput(in io.Reader) string {
 	reader := bufio.NewReader(in)
 	line, _, err := reader.ReadLine()
@@ -122,6 +126,7 @@ func readInput(in io.Reader) string {
 	return string(line)
 }
 
+// VersionString 返回版本信息字符串
 func VersionString() string {
 	return fmt.Sprintln("System:") +
 		fmt.Sprintf("\tOS:%s ARCH:%s GO:%s\n", runtime.GOOS, runtime.GOARCH, runtime.Version()) +
@@ -130,6 +135,7 @@ func VersionString() string {
 		fmt.Sprintln("\n\t</> with ❤ By vouv")
 }
 
+// Update 检查更新并提示用户
 func Update(cmd string, params ...string) {
 	ok, v, d := HasUpdate()
 	if !ok {
