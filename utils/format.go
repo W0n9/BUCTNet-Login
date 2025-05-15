@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// FormatFlux 格式化流量显示
 func FormatFlux(byte int64) string {
 	const tb = 1024 * 1024 * 1024 * 1024
 	const gb = tb / 1024
@@ -25,6 +26,7 @@ func FormatFlux(byte int64) string {
 	return fmt.Sprintf("%dB", byte)
 }
 
+// FormatTime 格式化时间显示
 func FormatTime(sec int64) string {
 	h := sec / 3600
 	sec %= 3600

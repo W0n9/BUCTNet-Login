@@ -13,6 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// charCodeAt 获取字符串指定位置的字符编码
 func charCodeAt(str string, index int) int {
 	if index >= len(str) {
 		return 0
@@ -20,6 +21,7 @@ func charCodeAt(str string, index int) int {
 	return int(rune(str[index]))
 }
 
+// s 字符串转为 int64 数组
 func s(a string, b bool) []int64 {
 	c := len(a)
 	var v []int64
@@ -33,6 +35,7 @@ func s(a string, b bool) []int64 {
 	return v
 }
 
+// l int64 数组转字符串
 func l(a []int64, b bool) string {
 	d := len(a)
 	c := int64((d - 1) << 2)
@@ -57,7 +60,7 @@ func l(a []int64, b bool) string {
 
 }
 
-// x encode
+// XEncode x 加密算法
 func XEncode(msg, key string) string {
 	if msg == "" {
 		return ""
@@ -94,7 +97,7 @@ func XEncode(msg, key string) string {
 	return l(v, false)
 }
 
-// md5 hash
+// PwdHmd5 生成 HMAC-MD5 密码
 func PwdHmd5(password, token string) string {
 	hm := hmac.New(md5.New, []byte(token))
 	hm.Write([]byte(password))
@@ -102,7 +105,7 @@ func PwdHmd5(password, token string) string {
 	return "{MD5}" + hmd5
 }
 
-// sha1 sum
+// Checksum 生成 SHA1 校验和
 func Checksum(data url.Values, token string) string {
 	username := data.Get("username")
 	password := data.Get("password")
@@ -122,7 +125,7 @@ func Checksum(data url.Values, token string) string {
 	return hex.EncodeToString(sh.Sum(nil))
 }
 
-// 加密信息
+// GenInfo 生成加密信息
 func GenInfo(data url.Values, token string) string {
 	xEncodeJson := map[string]interface{}{
 		"username": data.Get("username"),

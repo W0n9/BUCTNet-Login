@@ -45,6 +45,7 @@ type InfoResp struct {
 	WalletBalance float64 `json:"wallet_balance"`
 }
 
+// String 返回 InfoResp 的字符串表示
 func (r *InfoResp) String() string {
 	sb := strings.Builder{}
 	sb.WriteString(fmt.Sprintf(" 在线IP: %s\n", r.OnlineIP))

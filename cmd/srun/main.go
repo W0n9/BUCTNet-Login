@@ -48,6 +48,7 @@ var rootCmd = &cobra.Command{
 
 var debugMode bool
 
+// main 程序入口
 func main() {
 
 	rootCmd.PersistentFlags().BoolVarP(&debugMode, "debug", "d", false, "debug mode")

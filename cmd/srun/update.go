@@ -24,6 +24,7 @@ var client = http.Transport{
 	},
 }
 
+// HasUpdate 检查是否有新版本可用
 func HasUpdate() (ok bool, version string, dist string) {
 	req, err := http.NewRequest("GET", repo, nil)
 

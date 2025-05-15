@@ -4,22 +4,23 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var errParse = errors.New("error-parse")
 
-// generate callback function string
+// genCallback 生成 callback 字符串
 func genCallback() string {
 	return fmt.Sprintf("jsonp%d", int(time.Now().Unix()))
 }
 
-// make jsonp with callback
+// DoRequest 发送带 callback 的 GET 请求
 func DoRequest(url string, params url.Values) (*http.Response, error) {
 
 	// add callback
@@ -40,6 +41,7 @@ func DoRequest(url string, params url.Values) (*http.Response, error) {
 	return resp, nil
 }
 
+// GetJson 发送请求并解析 JSON 响应
 func GetJson(url string, data url.Values, res interface{}) (err error) {
 	resp, err := DoRequest(url, data)
 	if err != nil {

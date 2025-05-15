@@ -3,17 +3,19 @@ package store
 import (
 	"encoding/base64"
 	"encoding/json"
-	log "github.com/sirupsen/logrus"
-	"github.com/vouv/srun/model"
 	"os"
 	"os/user"
 	"path/filepath"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/vouv/srun/model"
 )
 
 const accountFileName = "account.json"
 
 var RootPath string
 
+// SetAccount 设置账号信息
 func SetAccount(username, password string) (err error) {
 	return WriteAccount(&model.Account{
 		Username: username,
@@ -21,6 +23,7 @@ func SetAccount(username, password string) (err error) {
 	})
 }
 
+// ReadAccount 读取账号信息
 func ReadAccount() (account *model.Account, err error) {
 	file, err := OpenAccountFile(os.O_RDONLY)
 	if err != nil {
@@ -33,6 +36,7 @@ func ReadAccount() (account *model.Account, err error) {
 	return
 }
 
+// OpenAccountFile 打开账号文件
 func OpenAccountFile(flag int) (file *os.File, err error) {
 	accountFilename, err := getAccountFilename()
 	if err != nil {
@@ -41,6 +45,7 @@ func OpenAccountFile(flag int) (file *os.File, err error) {
 	return os.OpenFile(accountFilename, flag, 0600)
 }
 
+// WriteAccount 写入账号信息
 func WriteAccount(account *model.Account) (err error) {
 	file, err := OpenAccountFile(os.O_CREATE | os.O_TRUNC | os.O_WRONLY)
 	if err != nil {
@@ -58,6 +63,7 @@ func WriteAccount(account *model.Account) (err error) {
 	return enc.Close()
 }
 
+// getAccountFilename 获取账号文件路径
 func getAccountFilename() (fileSrc string, err error) {
 	storageDir := filepath.Join(RootPath, ".srun")
 	if _, sErr := os.Stat(storageDir); sErr != nil {

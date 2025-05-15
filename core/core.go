@@ -3,18 +3,19 @@ package core
 import (
 	"errors"
 	"fmt"
+	"net/url"
+	"strconv"
+	"strings"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/vouv/srun/hash"
 	"github.com/vouv/srun/model"
 	"github.com/vouv/srun/resp"
 	"github.com/vouv/srun/utils"
-	"net/url"
-	"strconv"
-	"strings"
 )
 
 const (
-	baseAddr = "http://10.0.0.55"
+	baseAddr = "http://202.4.130.95"
 
 	challengeUrl = "/cgi-bin/get_challenge"
 	portalUrl    = "/cgi-bin/srun_portal"
@@ -22,7 +23,7 @@ const (
 	succeedUrl = "/cgi-bin/rad_user_info"
 )
 
-// 获取acid等
+// Prepare 获取 acid 等参数
 func Prepare() (int, error) {
 	first, err := get(baseAddr)
 	if err != nil {
@@ -37,7 +38,7 @@ func Prepare() (int, error) {
 	return strconv.Atoi(query.Query().Get("ac_id"))
 }
 
-// api Login
+// Login 登录 API，处理登录流程
 // step 1: prepare & get acid
 // step 2: get challenge
 // step 3: do login
@@ -94,7 +95,7 @@ func Login(account *model.Account) (err error) {
 	return
 }
 
-// api info
+// Info 查询用户信息 API
 func Info() (info *model.InfoResp, err error) {
 
 	// 余量查询
@@ -105,7 +106,7 @@ func Info() (info *model.InfoResp, err error) {
 	return
 }
 
-// api logout
+// Logout 注销 API
 func Logout(account *model.Account) (err error) {
 	defer func() {
 		account.AccessToken = ""
@@ -126,6 +127,7 @@ func Logout(account *model.Account) (err error) {
 	return
 }
 
+// getChallenge 获取 challenge
 func getChallenge(username string) (res resp.ChallengeResp, err error) {
 	qc := model.Challenge(username)
 	err = utils.GetJson(baseAddr+challengeUrl, qc, &res)
