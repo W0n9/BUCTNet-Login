@@ -134,14 +134,3 @@ func VersionString() string {
 		fmt.Sprintf("\tVersion: %s\n", Version) +
 		fmt.Sprintln("\n\t</> with ❤ By vouv")
 }
-
-// Update 检查更新并提示用户
-func Update(cmd string, params ...string) {
-	ok, v, d := HasUpdate()
-	if !ok {
-		log.Info("当前已是最新版本:", Version)
-		return
-	}
-	log.Info("发现新版本: ", v, "当前版本: ", Version)
-	log.Info("打开链接下载: ", d)
-}
