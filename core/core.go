@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/vouv/srun/hash"
 	"github.com/vouv/srun/model"
 	"github.com/vouv/srun/resp"
 	"github.com/vouv/srun/utils"
+	"go.uber.org/zap"
 )
 
 const (
@@ -22,6 +22,8 @@ const (
 
 	succeedUrl = "/cgi-bin/rad_user_info"
 )
+
+var log = zap.S()
 
 // Prepare 获取 acid 等参数
 func Prepare() (int, error) {
@@ -43,12 +45,12 @@ func Prepare() (int, error) {
 // step 2: get challenge
 // step 3: do login
 func Login(account *model.Account) (err error) {
-	log.Debug("Username: ", account.Username)
+	log.Debugw("Login", "username", account.Username)
 
 	// 先获取acid
 	acid, err := Prepare()
 	if err != nil {
-		log.Debug("prepare error:", err)
+		log.Debugw("prepare error", "err", err)
 		return
 	}
 
@@ -57,10 +59,10 @@ func Login(account *model.Account) (err error) {
 	// 创建登录表单
 	formLogin := model.Login(username, account.Password, acid)
 
-	//	get token
+	// get token
 	rc, err := getChallenge(username)
 	if err != nil {
-		log.Debug("get challenge error:", err)
+		log.Debugw("get challenge error", "err", err)
 		return
 	}
 
@@ -76,12 +78,12 @@ func Login(account *model.Account) (err error) {
 	ra := resp.ActionResp{}
 
 	if err = utils.GetJson(baseAddr+portalUrl, formLogin, &ra); err != nil {
-		log.Debug("request error", err)
+		log.Debugw("request error", "err", err)
 		return
 	}
 
 	if ra.Res != "ok" {
-		log.Debug("response msg is not 'ok'")
+		log.Debugw("response msg is not 'ok'", "msg", ra.ErrorMsg)
 		if strings.Contains(ra.ErrorMsg, "Arrearage users") {
 			err = errors.New("已欠费")
 		} else {
@@ -116,12 +118,12 @@ func Logout(account *model.Account) (err error) {
 	q := model.Logout(account.Username)
 	ra := resp.ActionResp{}
 	if err = utils.GetJson(baseAddr+portalUrl, q, &ra); err != nil {
-		log.Debug(err)
+		log.Debugw("logout error", "err", err)
 		err = ErrRequest
 		return
 	}
 	if ra.Error != "ok" {
-		log.Debug(ra)
+		log.Debugw("logout response", "resp", ra)
 		err = ErrRequest
 	}
 	return

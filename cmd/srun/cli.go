@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/vouv/srun/core"
 	"github.com/vouv/srun/store"

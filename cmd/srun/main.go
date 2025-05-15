@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 const Version = "v1.1.5"
@@ -41,15 +41,28 @@ var rootCmd = &cobra.Command{
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if debugMode {
-			log.SetLevel(log.DebugLevel)
+			log.Debug("Debug mode enabled")
 		}
 	},
 }
 
 var debugMode bool
+var log *zap.SugaredLogger
 
 // main 程序入口
 func main() {
+	var logger *zap.Logger
+	var err error
+	if debugMode {
+		logger, err = zap.NewDevelopment()
+	} else {
+		logger, err = zap.NewProduction()
+	}
+	if err != nil {
+		panic(err)
+	}
+	log = logger.Sugar()
+	defer log.Sync()
 
 	rootCmd.PersistentFlags().BoolVarP(&debugMode, "debug", "d", false, "debug mode")
 
@@ -60,14 +73,6 @@ func main() {
 	rootCmd.AddCommand(logoutCmd)
 	rootCmd.AddCommand(infoCmd)
 	rootCmd.AddCommand(configCmd)
-
-	log.SetOutput(os.Stdout)
-	log.SetLevel(log.InfoLevel)
-	log.SetFormatter(&log.TextFormatter{
-		// DisableTimestamp: true,
-		TimestampFormat: "2006-01-02 15:04:05",
-		FullTimestamp:   true,
-	})
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)

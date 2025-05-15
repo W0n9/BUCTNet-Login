@@ -7,13 +7,16 @@ import (
 	"os/user"
 	"path/filepath"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/vouv/srun/model"
+	"go.uber.org/zap"
 )
 
 const accountFileName = "account.json"
 
-var RootPath string
+var (
+	RootPath string
+	log      = zap.S()
+)
 
 // SetAccount 设置账号信息
 func SetAccount(username, password string) (err error) {
@@ -79,7 +82,7 @@ func getAccountFilename() (fileSrc string, err error) {
 func init() {
 	curUser, gErr := user.Current()
 	if gErr != nil {
-		log.Fatalln("无法读取账户信息, 请重新设置账户信息")
+		log.Fatal("无法读取账户信息, 请重新设置账户信息")
 	} else {
 		RootPath = curUser.HomeDir
 	}

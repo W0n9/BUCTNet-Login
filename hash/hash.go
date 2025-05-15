@@ -10,8 +10,10 @@ import (
 	"net/url"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
+
+var log = zap.S()
 
 // charCodeAt 获取字符串指定位置的字符编码
 func charCodeAt(str string, index int) int {
@@ -137,7 +139,8 @@ func GenInfo(data url.Values, token string) string {
 
 	xEncodeRaw, err := json.Marshal(xEncodeJson)
 	if err != nil {
-		log.Debug(err)
+		log.Debugw("json marshal error", "err", err)
+		// 这里无法直接访问log，静默失败或返回空字符串
 		return ""
 	}
 	xen := string(xEncodeRaw)

@@ -4,16 +4,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
-	log "github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 var errParse = errors.New("error-parse")
+var log = zap.S()
 
 // genCallback 生成 callback 字符串
 func genCallback() string {
@@ -48,7 +49,7 @@ func GetJson(url string, data url.Values, res interface{}) (err error) {
 		return err
 	}
 	defer resp.Body.Close()
-	raw, err := ioutil.ReadAll(resp.Body)
+	raw, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -58,7 +59,7 @@ func GetJson(url string, data url.Values, res interface{}) (err error) {
 	start := strings.Index(rawStr, "(")
 	end := strings.LastIndex(rawStr, ")")
 	if start == -1 && end == -1 {
-		log.Debug("raw response:", rawStr)
+		log.Debugw("raw response", "resp", rawStr)
 		return errParse
 	}
 	dt := string(raw)[start+1 : end]
