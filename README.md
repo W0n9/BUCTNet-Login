@@ -1,157 +1,73 @@
-# Srun
+# BUCTNet-Login
+
 
 [![Build Status](https://travis-ci.org/vouv/srun.svg?branch=master)](https://travis-ci.org/vouv/srun) [![Go Report Card](https://goreportcard.com/badge/github.com/vouv/srun)](https://goreportcard.com/report/github.com/vouv/srun) ![License](https://img.shields.io/packagist/l/doctrine/orm.svg) [![GoDoc](https://godoc.org/github.com/vouv/srun?status.svg)](https://godoc.org/github.com/vouv/srun/core)
 
-> An efficient client for BIT campus network
+> An efficient client for BUCT campus network
 
-北京理工大学校园网命令行登录工具
+北京化工大学校园网命令行登录工具
 - 支持linux、maxOS、windows
+- 实验性支持龙芯、部分路由器平台，如MT7621
 - 基于Go语言实现
 
-Related Projects
+## 如何获取
 
-- macOS客户端: [SrunBar](https://github.com/vouv/SrunBar)
+1. 在[Relesae](https://github.com/W0n9/BUCTNet-Login/releases/latest)处获取
+    > 其中MT7621等路由器SOC，选择mipsle架构（于NeWiFi3测试上测试通过）  
+    龙芯用户可以尝试选择mips64le架构（因缺少设备，未测试）
 
-## Install
+2. 自行编译，要求有Golang环境 `go version >= 1.24`   
+    1. 先克隆项目
+    ```
+    $ git clone https://github.com/W0n9/BUCTNet-Login && cd BUCTNet-Login
+    ```
+    2. 
+    ```bash
+    $ make all
+    ```
+    3. 编译好的可执行文件在`bin`文件夹中
 
-1. Homebrew(macOS only)
-
-```bash
-$ brew tap vouv/tap
-$ brew install srun
-$ srun config
-```
-
-2. Curl(for Linux amd64) [Release](https://github.com/vouv/srun/releases/latest)
-
-```bash
-# linux
-$ curl -L -o srun https://github.com/vouv/srun/releases/latest/download/srun-linux
-$ chmod +x ./srun
-$ ./srun config
-```
-
-3. go get
-
-如果已经[安装并配置GO环境](https://golang.google.cn/doc/install), 执行如下命令即可
-
-```bash
-$ go install github.com/vouv/srun/cmd/srun@latest
-$ $GOPATH/bin/srun config
-```
-
-
-## Usage
-
-### Show Help
+## 如何使用
+### 查看帮助
 
 ```
-$ srun -h
+$ BUCTNet-Login -h
 ```
 
-### Config
+### 配置登录程序使用的账户和密码
 
 ```
-$ srun config
+$ BUCTNet-Login config
 ```
 
-### Login
+### 登录
 
 ```
-$ srun
-$ srun login
+$ BUCTNet-Login login
 ```
 
-### Info
-```
-$ srun info
-```
-
-## Update Log
-
-2020.12.18
-
-- 自动构建切换到Github Actions
-
-2020.11.3
-
-- 优化新版登录逻辑
-- 优化命令行框架
-- 删除无用代码，优化代码结构
-
-2020.9.6
-
-- 修复一些bug
-- 移除不用的移动联通登录模式
-
-2019.11.16
-
-- 更新安装方式
-- 优化项目api与项目结构
-
-2019.9.10
-
-- 修改优化登录逻辑
-- 修复一些bug
-
-2019.1.3
-- 实现无缓冲输入密码（在macOS上测试通过）
-- 修复宿舍无法登录移动网的bug
-
-2018.11.24
-- 增加登出功能
-- 增加查询流量和余额功能
-
-2018.9.1
-- 实现登录与设置账号的功能
-
-
-### Contribute
-
-> 要求先安装好golang环境 go version > 1.10
-
-先克隆项目
+### 登出
 
 ```
-$ git clone https://github.com/vouv/srun && cd srun
+$ BUCTNet-Login logout
 ```
 
-macOS下编译
-
-```bash
-$ make
+### 查看信息
 ```
-或
-```bash
-$ make darwin
+$ BUCTNet-Login info
 ```
 
-Windows下编译
-```bash
-$ make windows
+### 保持登录，并每隔5秒检测状态
 ```
-
-Linux下编译
-```bash
-$ make linux
+$ BUCTNet-Login keepalive -i 5
 ```
-
-编译好的可执行文件在bin文件夹中
 
 ### About
 
 主要功能与原理
 
-- 本地保存账号到`$HOME/.srun/account.json`（对安全性有疑问的请自行看代码）
+- 本地保存账号到`$HOME/.BUCTNet-Login/account.json`
 - 使用账号快速登录校园网，环境支持的情况下也可以一键登录
 
-
 ### Thanks to
-
-- [logrus](https://github.com/sirupsen/logrus)
-- [cobra](https://github.com/spf13/cobra)
-
-
-
-
-
+- [vouv/srun](https://github.com/vouv/srun)提供的hash算法
