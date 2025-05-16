@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/W0n9/BUCTNet-Login/logger"
 	"github.com/spf13/cobra"
-	"github.com/vouv/srun/logger"
 	"go.uber.org/zap"
 )
 

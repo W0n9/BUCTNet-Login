@@ -11,10 +11,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/W0n9/BUCTNet-Login/core"
+	"github.com/W0n9/BUCTNet-Login/model"
+	"github.com/W0n9/BUCTNet-Login/store"
 	"github.com/spf13/cobra"
-	"github.com/vouv/srun/core"
-	"github.com/vouv/srun/model"
-	"github.com/vouv/srun/store"
 	"golang.org/x/term"
 )
 

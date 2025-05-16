@@ -7,7 +7,7 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/vouv/srun/model"
+	"github.com/W0n9/BUCTNet-Login/model"
 	"go.uber.org/zap"
 )
 

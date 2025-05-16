@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/vouv/srun/config"
-	"github.com/vouv/srun/hash"
-	"github.com/vouv/srun/model"
-	"github.com/vouv/srun/resp"
-	"github.com/vouv/srun/utils"
+	"github.com/W0n9/BUCTNet-Login/config"
+	"github.com/W0n9/BUCTNet-Login/hash"
+	"github.com/W0n9/BUCTNet-Login/model"
+	"github.com/W0n9/BUCTNet-Login/resp"
+	"github.com/W0n9/BUCTNet-Login/utils"
 	"go.uber.org/zap"
 )
 

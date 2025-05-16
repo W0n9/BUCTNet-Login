@@ -1,4 +1,4 @@
-module github.com/vouv/srun
+module github.com/W0n9/BUCTNet-Login
 
 go 1.24
 
