@@ -36,11 +36,14 @@ var configCmd = &cobra.Command{
 
 var rootCmd = &cobra.Command{
 	Use:   "srun [command]",
-	Short: "An efficient client for BIT campus network",
+	Short: "An efficient client for BUCT campus network",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return LoginE(cmd, args)
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		// Initialize logger with the correct debugMode value
+		logger.InitLogger(debugMode)
+		log = logger.GetLogger()
 		if debugMode {
 			log.Debug("Debug mode enabled")
 		}
@@ -52,11 +55,12 @@ var log *zap.SugaredLogger
 
 // main 程序入口
 func main() {
-	// 初始化日志
-	logger.InitLogger(debugMode)
-	log = logger.GetLogger()
-	defer log.Sync()
 
+	defer func() {
+		if log != nil {
+			log.Sync()
+		}
+	}()
 	rootCmd.PersistentFlags().BoolVarP(&debugMode, "debug", "d", false, "debug mode")
 
 	rootCmd.Version = Version
