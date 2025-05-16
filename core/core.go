@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/vouv/srun/config"
 	"github.com/vouv/srun/hash"
 	"github.com/vouv/srun/model"
 	"github.com/vouv/srun/resp"
@@ -14,20 +15,14 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	baseAddr = "http://202.4.130.95"
-
-	challengeUrl = "/cgi-bin/get_challenge"
-	portalUrl    = "/cgi-bin/srun_portal"
-
-	succeedUrl = "/cgi-bin/rad_user_info"
+var (
+	log = zap.S()
+	cfg = config.GetConfig()
 )
-
-var log = zap.S()
 
 // Prepare 获取 acid 等参数
 func Prepare() (int, error) {
-	first, err := get(baseAddr)
+	first, err := get(cfg.BaseURL)
 	if err != nil {
 		return 1, err
 	}
@@ -36,7 +31,7 @@ func Prepare() (int, error) {
 		return 1, err
 	}
 	target := second.Header.Get("location")
-	query, _ := url.Parse(baseAddr + target)
+	query, _ := url.Parse(cfg.BaseURL + target)
 	return strconv.Atoi(query.Query().Get("ac_id"))
 }
 
@@ -77,19 +72,25 @@ func Login(account *model.Account) (err error) {
 	// response
 	ra := resp.ActionResp{}
 
-	if err = utils.GetJson(baseAddr+portalUrl, formLogin, &ra); err != nil {
+	if err = utils.GetJson(cfg.BaseURL+cfg.PortalURL, formLogin, &ra); err != nil {
 		log.Debugw("request error", "err", err)
 		return
 	}
 
 	if ra.Res != "ok" {
-		log.Debugw("response msg is not 'ok'", "msg", ra.ErrorMsg)
-		if strings.Contains(ra.ErrorMsg, "Arrearage users") {
-			err = errors.New("已欠费")
-		} else {
-			err = errors.New(fmt.Sprint(ra))
+		log.Debugw("login failed", "response", ra)
+		// 检查已知错误类型
+		switch {
+		case strings.Contains(ra.ErrorMsg, "Arrearage users"):
+			return errors.New("已欠费")
+		case strings.Contains(ra.ErrorMsg, "Password is error"):
+			return errors.New("密码错误")
+		case strings.Contains(ra.ErrorMsg, "Username is error"):
+			return errors.New("用户名错误")
+		default:
+			// 未知错误返回原始信息
+			return fmt.Errorf("登录失败: %s", ra.ErrorMsg)
 		}
-		return
 	}
 
 	account.AccessToken = token
@@ -99,9 +100,8 @@ func Login(account *model.Account) (err error) {
 
 // Info 查询用户信息 API
 func Info() (info *model.InfoResp, err error) {
-
 	// 余量查询
-	err = utils.GetJson(baseAddr+succeedUrl, url.Values{}, &info)
+	err = utils.GetJson(cfg.BaseURL+cfg.SucceedURL, url.Values{}, &info)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func Logout(account *model.Account) (err error) {
 
 	q := model.Logout(account.Username)
 	ra := resp.ActionResp{}
-	if err = utils.GetJson(baseAddr+portalUrl, q, &ra); err != nil {
+	if err = utils.GetJson(cfg.BaseURL+cfg.PortalURL, q, &ra); err != nil {
 		log.Debugw("logout error", "err", err)
 		err = ErrRequest
 		return
@@ -132,6 +132,6 @@ func Logout(account *model.Account) (err error) {
 // getChallenge 获取 challenge
 func getChallenge(username string) (res resp.ChallengeResp, err error) {
 	qc := model.Challenge(username)
-	err = utils.GetJson(baseAddr+challengeUrl, qc, &res)
+	err = utils.GetJson(cfg.BaseURL+cfg.ChallengeURL, qc, &res)
 	return
 }

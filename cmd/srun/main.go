@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/vouv/srun/logger"
 	"go.uber.org/zap"
 )
 
@@ -51,17 +52,9 @@ var log *zap.SugaredLogger
 
 // main 程序入口
 func main() {
-	var logger *zap.Logger
-	var err error
-	if debugMode {
-		logger, err = zap.NewDevelopment()
-	} else {
-		logger, err = zap.NewProduction()
-	}
-	if err != nil {
-		panic(err)
-	}
-	log = logger.Sugar()
+	// 初始化日志
+	logger.InitLogger(debugMode)
+	log = logger.GetLogger()
 	defer log.Sync()
 
 	rootCmd.PersistentFlags().BoolVarP(&debugMode, "debug", "d", false, "debug mode")
