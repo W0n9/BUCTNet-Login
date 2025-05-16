@@ -13,6 +13,9 @@ on:
       - main
       - master
 
+permissions:
+  contents: read
+
 jobs:
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
