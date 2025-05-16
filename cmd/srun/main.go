@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const Version = "v1.1.5"
+const Version = "v1.1.6"
 
 var loginCmd = &cobra.Command{
 	Use:   "login",
@@ -32,6 +32,12 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Config srun",
 	Run:   Config,
+}
+
+var keepaliveCmd = &cobra.Command{
+	Use:   "keepalive",
+	Short: "Keep login state and auto reconnect when offline",
+	Run:   Keepalive,
 }
 
 var rootCmd = &cobra.Command{
@@ -70,6 +76,10 @@ func main() {
 	rootCmd.AddCommand(logoutCmd)
 	rootCmd.AddCommand(infoCmd)
 	rootCmd.AddCommand(configCmd)
+
+	// 添加keepalive命令
+	keepaliveCmd.Flags().IntP("interval", "i", 30, "检查间隔时间（秒）")
+	rootCmd.AddCommand(keepaliveCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
