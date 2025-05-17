@@ -1,0 +1,14 @@
+project_name: BUCTNet-Login
+builds:
+  - main: ./cmd/srun
+    binary: BUCTNet-Login
+    goos:
+      - windows
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - 386
+      - arm64
+      - mipsle
+      - mips64le

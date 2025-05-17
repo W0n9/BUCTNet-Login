@@ -13,10 +13,10 @@ linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_amd64 ./cmd
 
 mips64le:
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_mips64le ./cmd
+	CGO_ENABLED=0 GOOS=linux GOARCH=mips64le go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_mips64le ./cmd
 
 mipsle:
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_mipsle ./cmd
+	CGO_ENABLED=0 GOOS=linux GOARCH=mipsle go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_mipsle ./cmd
 
 windows:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_windows_amd64.exe ./cmd
