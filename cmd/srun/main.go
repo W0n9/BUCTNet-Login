@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const Version = "v1.1.6"
+const Version = "v1.1.7"
 
 var loginCmd = &cobra.Command{
 	Use:   "login",
