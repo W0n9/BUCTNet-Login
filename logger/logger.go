@@ -13,9 +13,19 @@ func InitLogger(debug bool) {
 	if debug {
 		cfg = zap.NewDevelopmentConfig()
 		cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		cfg.EncoderConfig.CallerKey = "caller"
+		cfg.EncoderConfig.EncodeCaller = zapcore.FullCallerEncoder
 	} else {
 		cfg = zap.NewProductionConfig()
 		cfg.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+		// 设置时间格式为人类可读的格式 (ISO8601)
+		// cfg.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05")
+		cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+		cfg.EncoderConfig.TimeKey = "time"
+		cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		// 使用控制台编码器替代默认的JSON编码器
+		cfg.Encoding = "console"
+		cfg.DisableCaller = true
 	}
 
 	logger, err := cfg.Build()
