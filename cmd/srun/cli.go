@@ -177,11 +177,10 @@ func KeepaliveE(cmd *cobra.Command, args []string) error {
 func ensureOnline(account *model.Account) error {
 	// 尝试获取信息，检查是否在线
 	info, err := core.Info()
-	if info.UserName == "" {
-		log.Info("检测到网络离线，尝试重新登录...")
-		return core.Login(account)
-	}
 	if err != nil {
+		log.Error(fmt.Sprintf("获取信息失败: %s", err.Error()))
+	}
+	if info == nil || info.UserName == "" {
 		log.Info("检测到网络离线，尝试重新登录...")
 		return core.Login(account)
 	}
