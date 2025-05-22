@@ -10,6 +10,8 @@ on:
 jobs:
   release:
     name: Release
+    permissions:
+      contents: write
     # strategy:
     #   matrix:
     #     os: [ ubuntu-latest ]
