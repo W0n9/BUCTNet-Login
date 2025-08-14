@@ -10,10 +10,10 @@ import (
 	"net/url"
 	"strings"
 
-	"go.uber.org/zap"
+	"github.com/W0n9/BUCTNet-Login/logger"
 )
 
-var log = zap.S()
+var log = logger.GetLogger()
 
 // charCodeAt 获取字符串指定位置的字符编码
 func charCodeAt(str string, index int) int {

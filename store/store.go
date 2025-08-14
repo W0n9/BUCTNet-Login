@@ -7,15 +7,15 @@ import (
 	"os/user"
 	"path/filepath"
 
+	"github.com/W0n9/BUCTNet-Login/logger"
 	"github.com/W0n9/BUCTNet-Login/model"
-	"go.uber.org/zap"
 )
 
 const accountFileName = "account.json"
 
 var (
 	RootPath string
-	log      = zap.S()
+	log      = logger.GetLogger()
 )
 
 // SetAccount 设置账号信息

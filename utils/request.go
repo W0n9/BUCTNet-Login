@@ -10,11 +10,11 @@ import (
 	"strings"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/W0n9/BUCTNet-Login/logger"
 )
 
 var errParse = errors.New("error-parse")
-var log = zap.S()
+var log = logger.GetLogger()
 
 // genCallback 生成 callback 字符串
 func genCallback() string {

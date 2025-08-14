@@ -9,14 +9,14 @@ import (
 
 	"github.com/W0n9/BUCTNet-Login/config"
 	"github.com/W0n9/BUCTNet-Login/hash"
+	"github.com/W0n9/BUCTNet-Login/logger"
 	"github.com/W0n9/BUCTNet-Login/model"
 	"github.com/W0n9/BUCTNet-Login/resp"
 	"github.com/W0n9/BUCTNet-Login/utils"
-	"go.uber.org/zap"
 )
 
 var (
-	log = zap.S()
+	log = logger.GetLogger()
 	cfg = config.GetConfig()
 )
 
