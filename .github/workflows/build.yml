@@ -27,7 +27,7 @@ jobs:
     steps:
       # Checks out a copy of your repository
       - id: checkout_code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - uses: actions/setup-go@v5
         with:
           stable: 'true'
