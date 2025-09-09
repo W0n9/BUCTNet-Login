@@ -28,7 +28,7 @@ jobs:
       # Checks out a copy of your repository
       - id: checkout_code
         uses: actions/checkout@v5
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           stable: 'true'
           # go-version: '1.24' # The Go version to download (if necessary) and use.
