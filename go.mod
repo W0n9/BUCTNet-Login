@@ -1,8 +1,6 @@
 module github.com/W0n9/BUCTNet-Login
 
-go 1.24.0
-
-toolchain go1.24.2
+go 1.26.0
 
 require (
 	github.com/go-resty/resty/v2 v2.17.2
