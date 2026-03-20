@@ -1,3 +1,4 @@
+// srun 校园网客户端：登录、注销、查询、配置与保活。
 package main
 
 import (
@@ -98,7 +99,7 @@ func ConfigE(cmd *cobra.Command, args []string) error {
 	fmt.Print("设置校园网账号:\n>")
 	username := readInput(in)
 
-	// 终端API
+	// 使用终端静默读密码（不回显）
 	fmt.Print("设置校园网密码(隐私输入):\n>")
 	fd := int(os.Stdin.Fd())
 	bytePwd, err := term.ReadPassword(fd)
@@ -108,7 +109,6 @@ func ConfigE(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 	pwd := string(bytePwd)
 
-	// trim
 	username = strings.TrimSpace(username)
 	pwd = strings.TrimSpace(pwd)
 
@@ -173,9 +173,8 @@ func KeepaliveE(cmd *cobra.Command, args []string) error {
 	}
 }
 
-// ensureOnline 确保网络在线，如果不在线则尝试登录
+// ensureOnline 通过 Info 接口判断是否仍在线；解析失败或 user_name 为空时视为离线并尝试 Login。
 func ensureOnline(account *model.Account) error {
-	// 尝试获取信息，检查是否在线
 	info, err := core.Info()
 	if err != nil {
 		log.Error(fmt.Sprintf("获取信息失败: %s", err.Error()))

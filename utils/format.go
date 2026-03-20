@@ -5,20 +5,21 @@ import (
 	"strings"
 )
 
-// FormatFlux 格式化流量显示
-func FormatFlux(byte int64) string {
+// FormatFlux 将字节数折合成 B/KB/MB/GB/TB 字符串（供 CLI 展示用量）。
+func FormatFlux(byte uint64) string {
 	const tb = 1024 * 1024 * 1024 * 1024
 	const gb = tb / 1024
 	const mb = gb / 1024
 	const kb = 1024
+	b := float64(byte)
 	if byte > tb {
-		return fmt.Sprintf("%.2fTB", float64(byte)/tb)
+		return fmt.Sprintf("%.2fTB", b/float64(tb))
 	}
 	if byte > gb {
-		return fmt.Sprintf("%.2fGB", float64(byte)/gb)
+		return fmt.Sprintf("%.2fGB", b/float64(gb))
 	}
 	if byte > mb {
-		return fmt.Sprintf("%.1fMB", float64(byte)/mb)
+		return fmt.Sprintf("%.1fMB", b/float64(mb))
 	}
 	if byte > kb {
 		return fmt.Sprintf("%dKB", byte/kb)
@@ -26,7 +27,7 @@ func FormatFlux(byte int64) string {
 	return fmt.Sprintf("%dB", byte)
 }
 
-// FormatTime 格式化时间显示
+// FormatTime 将秒数格式化为「时:分:秒」样式的中文片段。
 func FormatTime(sec int64) string {
 	h := sec / 3600
 	sec %= 3600

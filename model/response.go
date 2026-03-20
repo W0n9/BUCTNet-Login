@@ -1,3 +1,4 @@
+// model 包定义 API 往返使用的请求/响应数据结构。
 package model
 
 import (
@@ -7,11 +8,13 @@ import (
 	"github.com/W0n9/BUCTNet-Login/utils"
 )
 
+// ChallengeResp challenge 接口返回：加密用 token 与客户端 IP。
 type ChallengeResp struct {
 	Challenge string `json:"challenge"`
 	ClientIp  string `json:"client_ip"`
 }
 
+// ActionResp 登录、注销等操作接口的通用响应。
 type ActionResp struct {
 	Res      string      `json:"res"`
 	Error    string      `json:"error"`
@@ -20,12 +23,13 @@ type ActionResp struct {
 	ClientIp string      `json:"client_ip"`
 }
 
+// InfoResp 用户信息查询结果；字节类字段用 uint64 承接网关可能返回的超大无符号数。
 type InfoResp struct {
 	ServerFlag    int64   `json:"ServerFlag"`
 	AddTime       int64   `json:"add_time"`
-	AllBytes      int64   `json:"all_bytes"`
-	BytesIn       int64   `json:"bytes_in"`
-	BytesOut      int64   `json:"bytes_out"`
+	AllBytes      uint64  `json:"all_bytes"`
+	BytesIn       uint64  `json:"bytes_in"`
+	BytesOut      uint64  `json:"bytes_out"`
 	CheckoutDate  int64   `json:"checkout_date"`
 	Domain        string  `json:"domain"`
 	Error         string  `json:"error"`
@@ -34,9 +38,9 @@ type InfoResp struct {
 	OnlineIP      string  `json:"online_ip"`
 	ProductsName  string  `json:"products_name"`
 	RealName      string  `json:"real_name"`
-	RemainBytes   int64   `json:"remain_bytes"`
+	RemainBytes   uint64  `json:"remain_bytes"`
 	RemainSeconds int64   `json:"remain_seconds"`
-	SumBytes      int64   `json:"sum_bytes"`
+	SumBytes      uint64  `json:"sum_bytes"`
 	SumSeconds    int64   `json:"sum_seconds"`
 	UserBalance   float64 `json:"user_balance"`
 	UserCharge    float64 `json:"user_charge"`
@@ -58,6 +62,7 @@ func (r *InfoResp) String() string {
 	return sb.String()
 }
 
+// InfoResult OAuth/门户回调中的 ac_id、用户名等（若有使用）。
 type InfoResult struct {
 	Acid        int    `json:"ac_id"`
 	Username    string `json:"username"`

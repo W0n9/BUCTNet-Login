@@ -1,3 +1,4 @@
+// core 封装校园网门户 HTTP 流程：准备 ac_id、challenge、登录/注销/查询。
 package core
 
 import (
@@ -20,7 +21,7 @@ var (
 	cfg = config.GetConfig()
 )
 
-// Prepare 获取 acid 等参数
+// Prepare 跟随门户重定向，从最终 URL 解析出 ac_id。
 func Prepare() (int, error) {
 	first, err := get(cfg.BaseURL)
 	if err != nil {
@@ -35,14 +36,11 @@ func Prepare() (int, error) {
 	return strconv.Atoi(query.Query().Get("ac_id"))
 }
 
-// Login 登录 API，处理登录流程
-// step 1: prepare & get acid
-// step 2: get challenge
-// step 3: do login
+// Login 门户登录：解析 ac_id → 取 challenge/token → 带加密 info/chksum 提交表单。
 func Login(account *model.Account) (err error) {
 	log.Debugw("Login", "username", account.Username)
 
-	// 先获取acid
+	// 跟随门户跳转，得到当前线路的 ac_id
 	acid, err := Prepare()
 	if err != nil {
 		log.Debugw("prepare error", "err", err)
@@ -54,22 +52,24 @@ func Login(account *model.Account) (err error) {
 	// 创建登录表单
 	formLogin := model.Login(username, account.Password, acid)
 
-	// get token
 	rc, err := getChallenge(username)
 	if err != nil {
 		log.Debugw("get challenge error", "err", err)
 		return
 	}
 
+	// challenge 同时作为后续 HMAC / XEncode 的密钥
 	token := rc.Challenge
 	ip := rc.ClientIp
+	if strings.TrimSpace(token) == "" {
+		return fmt.Errorf("获取 challenge 失败: token 为空")
+	}
 
 	formLogin.Set("ip", ip)
 	formLogin.Set("info", hash.GenInfo(formLogin, token))
 	formLogin.Set("password", hash.PwdHmd5("", token))
 	formLogin.Set("chksum", hash.Checksum(formLogin, token))
 
-	// response
 	ra := resp.ActionResp{}
 
 	if err = utils.GetJson(cfg.BaseURL+cfg.PortalURL, formLogin, &ra); err != nil {
@@ -98,17 +98,16 @@ func Login(account *model.Account) (err error) {
 	return
 }
 
-// Info 查询用户信息 API
-func Info() (info *model.InfoResp, err error) {
-	// 余量查询
-	err = utils.GetJson(cfg.BaseURL+cfg.SucceedURL, url.Values{}, &info)
-	if err != nil {
+// Info 查询在线用户信息（成功页 JSONP），解析为 InfoResp。
+func Info() (*model.InfoResp, error) {
+	var v model.InfoResp
+	if err := utils.GetJson(cfg.BaseURL+cfg.SucceedURL, url.Values{}, &v); err != nil {
 		return nil, err
 	}
-	return
+	return &v, nil
 }
 
-// Logout 注销 API
+// Logout 调用注销接口并清空本地 Account 中的 token/acid。
 func Logout(account *model.Account) (err error) {
 	defer func() {
 		account.AccessToken = ""
@@ -129,7 +128,7 @@ func Logout(account *model.Account) (err error) {
 	return
 }
 
-// getChallenge 获取 challenge
+// getChallenge 请求网关下发 challenge 与客户端 IP。
 func getChallenge(username string) (res resp.ChallengeResp, err error) {
 	qc := model.Challenge(username)
 	err = utils.GetJson(cfg.BaseURL+cfg.ChallengeURL, qc, &res)

@@ -1,3 +1,4 @@
+// hash 包实现门户所需的 SRBX1 加密、密码与校验和。
 package hash
 
 import (
@@ -62,9 +63,9 @@ func l(a []int64, b bool) string {
 
 }
 
-// XEncode x 加密算法
+// XEncode 与前端一致的类 XXTEA 变换；msg 为明文，key 为 challenge。空 msg/key 时返回空串以防越界。
 func XEncode(msg, key string) string {
-	if msg == "" {
+	if msg == "" || key == "" {
 		return ""
 	}
 	v := s(msg, true)
@@ -127,7 +128,7 @@ func Checksum(data url.Values, token string) string {
 	return hex.EncodeToString(sh.Sum(nil))
 }
 
-// GenInfo 生成加密信息
+// GenInfo 组装用户信息 JSON，经 XEncode、标准 Base64 再按字典替换，得到表单字段 info（前缀 {SRBX1}）。
 func GenInfo(data url.Values, token string) string {
 	xEncodeJson := map[string]interface{}{
 		"username": data.Get("username"),
@@ -140,12 +141,12 @@ func GenInfo(data url.Values, token string) string {
 	xEncodeRaw, err := json.Marshal(xEncodeJson)
 	if err != nil {
 		log.Debugw("json marshal error", "err", err)
-		// 这里无法直接访问log，静默失败或返回空字符串
 		return ""
 	}
 	xen := string(xEncodeRaw)
 	xEncodeRes := XEncode(xen, token)
 
+	// Base64 字符集与同序的自定义密文字符表一一映射（与官方门户脚本一致）
 	const dictKey = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 	const dictVal = "LVoJPiCN2R8G90yg+hmFHuacZ1OWMnrsSTXkYpUq/3dlbfKwv6xztjI7DeBE45QA="
 	dict := map[string]string{}
