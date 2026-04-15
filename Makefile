@@ -13,7 +13,7 @@ linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_amd64 ./cmd/srun
 
 linux_arm64:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_arm64 ./cmd/srun
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_arm64 ./cmd/srun
 
 mips64le:
 	CGO_ENABLED=0 GOOS=linux GOARCH=mips64le go build -trimpath -ldflags "-w -s" -o bin/BUCTNet-Login_linux_mips64le ./cmd/srun
